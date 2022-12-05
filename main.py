@@ -2,51 +2,165 @@ from pyswip import *
 from tkinter import *
 import numpy as np 
 
-
-matriz = np.zeros((5,10),dtype=np.int64)
-
-
 prolog = Prolog()
-prolog.consult("Prolog/mapa1.pl")
+prolog.consult("Prolog/base.pl")
 
-lista = np.zeros((5,10),dtype=np.int64)
+lista = np.zeros((10,10),dtype=np.int64)
 
-X = "X"
+Game = False
 
-for valor in prolog.query("barril("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 1
+def fase1():
+    
 
-for valor in prolog.query("escada("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 4
+    A = "X"
 
-for valor in prolog.query("marreta("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 5
-
-for valor in prolog.query("player("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 10
-
-for valor in prolog.query("donkeyKong("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 15
-
-for valor in prolog.query("princesa("+ X +",Y)"):
-    print(valor["Y"],valor["X"])
-    lista[valor["Y"]][valor["X"]] = 20
+    for valor in prolog.query("dados1("+ A +",B,C,D,E,F,G)"):
+        print(valor["X"],"\n", valor["B"],"\n", valor["C"],"\n",valor["D"],"\n", valor["E"],"\n", valor["F"],"\n",valor["G"],"\n")
 
 
+    for ElenNum in valor["B"]:
+        lista[ElenNum[1]][ElenNum[0]] = 1
 
-#for i in range(0,5):
-    #for j in range(0,10):
-        #lista[i][j] = 0
-        #lista.append(i)
-    #lista.append("\n")
+    for ElenNum in valor["D"]:
+        lista[ElenNum[1]][ElenNum[0]] = 4
 
-matriz = lista
-print(lista)
+    ElenNum = valor["E"]
+    lista[ElenNum[1]][ElenNum[0]] = 5
+
+    ElenNum = valor["X"]
+    lista[ElenNum[1]][ElenNum[0]] = 10
+
+    ElenNum = valor["F"]
+    lista[ElenNum[1]][ElenNum[0]] = 15
+
+    ElenNum = valor["G"]
+    lista[ElenNum[1]][ElenNum[0]] = 20
+
+    valor1 = list(prolog.query("fase1(0)"))
+    print(valor1)
+
+    Game(lista)
+
+"""
+def fase2():
+
+    X = "X"
+
+    for valor in prolog.query("dados1("+ X +",Y,Z)"):
+        print(valor["X"], valor["Y"], valor["Z"])
+
+
+    for ElenNum in valor["X"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 1
+
+    for ElenNum in valor["Y"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 4
+
+    ElenNum = valor["Z"]
+    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    lista[ElenNum[1]][ElenNum[0]] = 5
+
+    lista[0][0] = 10
+
+    lista[4][8] = 15
+
+    lista[4][9] = 20
+    valor1 = bool (prolog.query("fase2(0)"))
+    print(valor1)
+
+    Game(lista)
+
+def fase3():
+
+    X = "X"
+
+    for valor in prolog.query("dados1("+ X +",Y,Z)"):
+        print(valor["X"], valor["Y"], valor["Z"])
+
+
+    for ElenNum in valor["X"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 1
+
+    for ElenNum in valor["Y"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 4
+
+    ElenNum = valor["Z"]
+    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    lista[ElenNum[1]][ElenNum[0]] = 5
+
+    lista[0][0] = 10
+
+    lista[4][8] = 15
+
+    lista[4][9] = 20
+    valor1 = bool (prolog.query("fase3(0)"))
+    print(valor1)
+
+    Game(lista)
+
+def fase4():
+
+    X = "X"
+
+    for valor in prolog.query("dados1("+ X +",Y,Z)"):
+        print(valor["X"], valor["Y"], valor["Z"])
+
+
+    for ElenNum in valor["X"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 1
+
+    for ElenNum in valor["Y"]:
+        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+        lista[ElenNum[1]][ElenNum[0]] = 4
+
+    ElenNum = valor["Z"]
+    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    lista[ElenNum[1]][ElenNum[0]] = 5
+
+    lista[0][0] = 10
+
+    lista[4][8] = 15
+
+    lista[4][9] = 20
+    valor1 = bool (prolog.query("fase4(0)"))
+    print(valor1)
+
+    Game(lista)
+"""
+
+def Game(matriz):
+
+    k = 4
+
+    for i in range(0,5):
+        for j in range(0,10):
+            if matriz[k][j] == 1:
+                texto_resposta = Label(jogo, image=barril )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 4:
+                texto_resposta = Label(jogo, image=escada )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 5:
+                texto_resposta = Label(jogo, image=marreta )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 10:
+                texto_resposta = Label(jogo, image=mario )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 15:
+                texto_resposta = Label(jogo, image=donkeykong )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 20:
+                texto_resposta = Label(jogo, image=princesa )
+                texto_resposta.grid(column=j,row=i)
+            else:
+                texto_resposta = Label(jogo, image=imagevazia )
+                texto_resposta.grid(column=j,row=i)
+        k -= 1
     
 
 janela = Tk()
@@ -65,28 +179,16 @@ princesa = PhotoImage(file="Imagens/PrincesaF.png")
 jogo = Frame(janela, background="red")
 jogo.pack(padx=40, pady=40)
 
-for i in range(0,5):
-    for j in range(0,10):
-        if matriz[i][j] == 1:
-            texto_resposta = Label(jogo, image=barril )
-            texto_resposta.grid(column=j,row=i)
-        elif matriz[i][j] == 4:
-            texto_resposta = Label(jogo, image=escada )
-            texto_resposta.grid(column=j,row=i)
-        elif matriz[i][j] == 5:
-            texto_resposta = Label(jogo, image=marreta )
-            texto_resposta.grid(column=j,row=i)
-        elif matriz[i][j] == 10:
-            texto_resposta = Label(jogo, image=mario )
-            texto_resposta.grid(column=j,row=i)
-        elif matriz[i][j] == 15:
-            texto_resposta = Label(jogo, image=donkeykong )
-            texto_resposta.grid(column=j,row=i)
-        elif matriz[i][j] == 20:
-            texto_resposta = Label(jogo, image=princesa )
-            texto_resposta.grid(column=j,row=i)
-        else:
-            texto_resposta = Label(jogo, image=imagevazia )
-            texto_resposta.grid(column=j,row=i)
+Fase1 = Button ( jogo, text= "Fase1", command=fase1 )
+Fase1.grid(column=1,row=1)
 
+"""
+Fase2 = Button ( jogo, text= "Fase2", command=fase2 )
+Fase2.grid(column=2,row=1)
+Fase3 = Button ( jogo, text= "Fase3", command=fase3 )
+Fase3.grid(column=3,row=1)
+Fase4 = Button ( jogo, text= "Fase4", command=fase4 )
+Fase4.grid(column=4,row=1)
+"""
+        
 janela.mainloop()

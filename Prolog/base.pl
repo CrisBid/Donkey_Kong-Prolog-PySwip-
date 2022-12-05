@@ -1,26 +1,290 @@
+%main([0,0], [[4,0],[5,0],[1,2],[8,3],[1,4],[5,4]], [], [[3,0],[9,1],[6,2],[3,3]],[7,2], S).
 
-mapa(X).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	Criar fases 1,2,3,4				    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%chama a main com a predefinição da fase 1(Player, Barris, Escadas, Marreta)
+dados1(A,B,C,D,E,F,G):-
+	CBarris = [[4,0],[5,0],[1,2],[8,3],[1,4],[5,4]],
+	CParedes = [],
+	CEscadas = [[3,0],[9,1],[6,2],[3,3]],
+	CMarreta = [7,2],
+	CDonkeyKong = [8,4],
+	CPrincesa = [9,4],
+	A = [0,0],
+	B = CBarris,
+	C = CParedes,
+	D = CEscadas,
+	E = CMarreta,
+	F = CDonkeyKong,
+	G = CPrincesa.
+	
+fase1(Inicio) :- 
+	(Inicio >= 0,
+	Inicio < 10,
+	Inicio =\= 3,
+	Inicio =\= 4,
+	Inicio =\= 5 ->
+	CBarris = [[4,0],[5,0],[1,2],[8,3],[1,4],[5,4]],
+	CParedes = [],
+	CEscadas = [[3,0],[9,1],[6,2],[3,3]],
+	CMarreta = [7,2],
+	CDonkeyKong = [8,4],
+	CPrincesa = [9,4],
+	main([0,Inicio], CBarris, CParedes, CEscadas,CMarreta, Solucao)).
+	
+%chama a main com a predefinição da fase 2(Player, Barris, Escadas, Marreta)
+fase2(Inicio) :- 
+	(Inicio >= 0,
+	Inicio < 10,
+	Inicio =\= 3,
+	Inicio =\= 4,
+	Inicio =\= 5 ->
+	main([0,Inicio], [[4,0], [5,0], [1,2], [1,4], [5,4], [8,3]], [], [[3,0], [9,1], [6,2], [3,3]], [7,2], Solucao)).
+	
+%chama a main com a predefinição da fase 3(Player, Barris, Escadas, Marreta)
+fase3(Inicio) :- 
+	(Inicio >= 0,
+	Inicio < 10,
+	Inicio =\= 3,
+	Inicio =\= 4,
+	Inicio =\= 5 ->
+	main([0,Inicio], [[4,0], [5,0], [1,2], [1,4], [5,4], [8,3]], [], [[3,0], [9,1], [6,2], [3,3]], [7,2], Solucao)).
 
-mapaElementos(X,[]).
+%chama a main com a predefinição da fase 4(Player, Barris, Escadas, Marreta)
+fase4(Inicio) :- 
+	(Inicio >= 0,
+	Inicio < 10,
+	Inicio =\= 3,
+	Inicio =\= 4,
+	Inicio =\= 5 ->
+	main([0,Inicio], [[4,0], [5,0], [1,2], [1,4], [5,4], [8,3]], [], [[3,0], [9,1], [6,2], [3,3]], [7,2], Solucao)).
+	
 
-limitMapaH(Y).
-limitMapaW(X).
+% ====================================================== FUNCOES DE MOVIMENTOS =================================================================
+% Cima
+% Somente onde há uma escada
+s(
+	[X,Y], 
+	[X,Ynovo],ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- Y<4, Ynovo is Y + 1, 
+	pertence(
+		[X, Y], 
+		ListaEscadas
+	), 
+	not(
+		pertence(
+			[X, Ynovo], 
+			ListaParedes
+		)
+	).
 
-barril(X,Y).
-parede(X,Y).
-escada(X,Y).
+% Baixo
+% Somente se na posição abaixo há uma escada
+s(
+	[X,Y], 
+	[X,Ynovo],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- Y>0, Ynovo is Y - 1, 
+pertence(
+	[X, Ynovo], 
+	ListaEscadas
+), 
+not(
+	pertence(
+		[X, Ynovo], 
+		ListaParedes
+	)
+).
 
-player(X,Y).
+% Direita
+% Dois casos:
+%			1) Caso não haja parede nem barril, anda uma unidade
+%			2) Caso haja um barril, anda duas unidades se não houver parede ou outro barril
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X<9, Xnovo is X + 1, 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaBarris
+	)
+).
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X<8, Xnovo is X + 2, 
+Xmid is X+1, 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaBarris
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaEscadas
+	)
+), 
+pertence(
+	[Xmid, Y], 
+	ListaBarris
+).
 
-kong(X,Y).
+% Esquerda
+% Dois casos:
+%			1) Caso não haja parede nem barril, anda uma unidade
+%			2) Caso haja um barril, anda duas unidades se não houver parede ou outro barril
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X>0, 
+Xnovo is X - 1, 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaBarris
+	)
+).
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X>1, 
+Xnovo is X - 2, 
+Xmid is X-1, 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaBarris
+	)
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaEscadas
+	)
+), 
+pertence(
+	[Xmid, Y], 
+	ListaBarris
+).
+% ====================================================== FUNCOES DE MOVIMENTOS =================================================================
 
-princesa(X,Y).
 
-%Funcoes%
 
-dentroLimiteW(X) :- X < limitMapaW(X).
-dentroLimiteH(Y) :- Y < limitMapaW(Y).
+% ============================================== FUNCOES BASICAS DE MANIPULAÇÃO DE LISTA ======================================================
+% Decompor a lista
+cons(X,Y,[X|Y]).
 
-pertence(Elem,[Elem|_ ]).
-pertence(Elem,[ _| Cauda]) :- pertence(Elem,Cauda).
+% Inverter lista
+inverte([],[]).
+inverte([E|C], Linv):- inverte(C,C_Inv), concatena(C_Inv,[E], Linv).
 
+% Concatena duas listas
+concatena([],L,L).
+concatena([H|T],L2,[H|T2]) :- concatena(T,L2,T2).
+
+meta(X, Y) :- X = Y.
+
+% Verififcar se um elemento esta na lista
+pertence(E, [E|_]).
+pertence(E, [_|Cauda]):- pertence(E, Cauda).
+
+% Retira um elemento da lista
+retirar_elemento(Elem,[Elem|Cauda],Cauda).
+retirar_elemento(Elem,[Cabeca|Cauda],[Cabeca|Resultado]) :- retirar_elemento(Elem,Cauda,Resultado).
+% ============================================== FUNCOES BASICAS DE MANIPULAÇÃO DE LISTA ======================================================
+
+
+% ==================================================== BUSCA EVOLUTIVA ======================================================
+estende([Estado|Caminho],ListaSucessores,ListaBarris, ListaParedes,ListaEscadas):- 
+	bagof(
+		[Sucessor,Estado|Caminho], 
+		(s(Estado,Sucessor,ListaBarris,ListaParedes,ListaEscadas),not(pertence(Sucessor,[Estado|Caminho]))), 
+		ListaSucessores
+	),!.
+estende( _ ,[], _, _, _). 
+
+bl([[Estado|Caminho]|_],ListaBarris, ListaParedes,ListaEscadas,Objetivo, [Estado|Caminho]) :- 
+	meta(Estado, Objetivo).
+bl([Primeiro|Outros],ListaBarris, ListaParedes,ListaEscadas,Objetivo, Solucao) :-
+	estende(Primeiro,Sucessores,ListaBarris, ListaParedes, ListaEscadas),
+	concatena(Outros,Sucessores,NovaFronteira),
+	bl(NovaFronteira,ListaBarris,ListaParedes,ListaEscadas,Objetivo, Solucao).
+% ==================================================== BUSCA EVOLUTIVA ======================================================
+
+
+solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, Objetivo, Solucao) :- bl([[PosicaoInicial]],ListaBarris, ListaParedes,ListaEscadas,Objetivo, Solucao).
+
+
+% Funcao principal - 
+% Paremetros: posição inicial da busca
+%             lista de barris 
+%			  lista de paredes
+%             lista de escadas
+%             posicao do martelo para matar o donkey kong
+%             variavel para receber o caminho percorrido
+
+% A Princesa Peach e o Donkey Kong se encontram no último andar e última coluna em todos os casos de teste
+main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, S) :-
+	solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, PosicaoMartelo, S2),
+	inverte(S2, S2I),
+	write('Achou a Marreta na posição '),
+	write(PosicaoMartelo),
+	write(', Coletado pelo seguinte caminho:'),
+	writeln(S2I),
+	cons(X, Y, S2),
+	solucao_bl(X, ListaBarris,ListaParedes,ListaEscadas, [9, 4], S3),
+	inverte(S3, S3I),
+	write('Apos pegar a marreta achou o Donkey Kong na posição '),
+	write([9, 4]),
+	write(', pelo seguinte caminho:'),
+	writeln(S3I),
+	retirar_elemento(PosicaoMartelo,S2,S2SM),
+	concatena(S3, S2SM, S4),
+	inverte(S4, S4I),
+	write('Caminho completo percorrido para alcançar o objetico:'),
+	writeln(S4I),
+	inverte(S4, S).
