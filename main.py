@@ -21,6 +21,9 @@ def fase1():
     for ElenNum in valor["B"]:
         lista[ElenNum[1]][ElenNum[0]] = 1
 
+    for ElenNum in valor["C"]:
+        lista[ElenNum[1]][ElenNum[0]] = 3
+
     for ElenNum in valor["D"]:
         lista[ElenNum[1]][ElenNum[0]] = 4
 
@@ -39,99 +42,123 @@ def fase1():
     valor1 = list(prolog.query("fase1(0)"))
     print(valor1)
 
-    Game(lista)
-
-"""
-def fase2():
-
-    X = "X"
-
-    for valor in prolog.query("dados1("+ X +",Y,Z)"):
-        print(valor["X"], valor["Y"], valor["Z"])
-
-
-    for ElenNum in valor["X"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
-        lista[ElenNum[1]][ElenNum[0]] = 1
-
-    for ElenNum in valor["Y"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
-        lista[ElenNum[1]][ElenNum[0]] = 4
-
-    ElenNum = valor["Z"]
-    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
-    lista[ElenNum[1]][ElenNum[0]] = 5
-
-    lista[0][0] = 10
-
-    lista[4][8] = 15
-
-    lista[4][9] = 20
-    valor1 = bool (prolog.query("fase2(0)"))
+    valor1 = bool(prolog.query("fase1(0)"))
     print(valor1)
 
     Game(lista)
 
-def fase3():
 
-    X = "X"
+def fase2():
 
-    for valor in prolog.query("dados1("+ X +",Y,Z)"):
-        print(valor["X"], valor["Y"], valor["Z"])
+    A = "X"
+
+    for valor in prolog.query("dados2("+ A +",B,C,D,E,F,G)"):
+        print(valor["X"],"\n", valor["B"],"\n", valor["C"],"\n",valor["D"],"\n", valor["E"],"\n", valor["F"],"\n",valor["G"],"\n")
 
 
-    for ElenNum in valor["X"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    for ElenNum in valor["B"]:
         lista[ElenNum[1]][ElenNum[0]] = 1
 
-    for ElenNum in valor["Y"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    for ElenNum in valor["C"]:
+        lista[ElenNum[1]][ElenNum[0]] = 3
+
+    for ElenNum in valor["D"]:
         lista[ElenNum[1]][ElenNum[0]] = 4
 
-    ElenNum = valor["Z"]
-    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    ElenNum = valor["E"]
     lista[ElenNum[1]][ElenNum[0]] = 5
 
-    lista[0][0] = 10
+    ElenNum = valor["X"]
+    lista[ElenNum[1]][ElenNum[0]] = 10
 
-    lista[4][8] = 15
+    ElenNum = valor["F"]
+    lista[ElenNum[1]][ElenNum[0]] = 15
 
-    lista[4][9] = 20
-    valor1 = bool (prolog.query("fase3(0)"))
+    ElenNum = valor["G"]
+    lista[ElenNum[1]][ElenNum[0]] = 20
+
+    valor1 = list(prolog.query("fase2(0)"))
+    print(valor1)
+
+    valor1 = bool(prolog.query("fase2(0)"))
+    print(valor1)
+
+    Game(lista)
+
+
+def fase3():
+
+    A = "X"
+
+    for valor in prolog.query("dados3("+ A +",B,C,D,E,F,G)"):
+        print(valor["X"],"\n", valor["B"],"\n", valor["C"],"\n",valor["D"],"\n", valor["E"],"\n", valor["F"],"\n",valor["G"],"\n")
+
+
+    for ElenNum in valor["B"]:
+        lista[ElenNum[1]][ElenNum[0]] = 1
+
+    for ElenNum in valor["C"]:
+        lista[ElenNum[1]][ElenNum[0]] = 3
+
+    for ElenNum in valor["D"]:
+        lista[ElenNum[1]][ElenNum[0]] = 4
+
+    ElenNum = valor["E"]
+    lista[ElenNum[1]][ElenNum[0]] = 5
+
+    ElenNum = valor["X"]
+    lista[ElenNum[1]][ElenNum[0]] = 10
+
+    ElenNum = valor["F"]
+    lista[ElenNum[1]][ElenNum[0]] = 15
+
+    ElenNum = valor["G"]
+    lista[ElenNum[1]][ElenNum[0]] = 20
+
+    valor1 = list(prolog.query("fase3(0)"))
+    print(valor1)
+
+    valor1 = bool(prolog.query("fase3(0)"))
     print(valor1)
 
     Game(lista)
 
 def fase4():
 
-    X = "X"
+    A = "X"
 
-    for valor in prolog.query("dados1("+ X +",Y,Z)"):
-        print(valor["X"], valor["Y"], valor["Z"])
+    for valor in prolog.query("dados4("+ A +",B,C,D,E,F,G)"):
+        print(valor["X"],"\n", valor["B"],"\n", valor["C"],"\n",valor["D"],"\n", valor["E"],"\n", valor["F"],"\n",valor["G"],"\n")
 
 
-    for ElenNum in valor["X"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    for ElenNum in valor["B"]:
         lista[ElenNum[1]][ElenNum[0]] = 1
 
-    for ElenNum in valor["Y"]:
-        print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    for ElenNum in valor["C"]:
+        lista[ElenNum[1]][ElenNum[0]] = 3
+
+    for ElenNum in valor["D"]:
         lista[ElenNum[1]][ElenNum[0]] = 4
 
-    ElenNum = valor["Z"]
-    print(ElenNum,"= X = ",ElenNum[1],"Y = ",ElenNum[0])
+    ElenNum = valor["E"]
     lista[ElenNum[1]][ElenNum[0]] = 5
 
-    lista[0][0] = 10
+    ElenNum = valor["X"]
+    lista[ElenNum[1]][ElenNum[0]] = 10
 
-    lista[4][8] = 15
+    ElenNum = valor["F"]
+    lista[ElenNum[1]][ElenNum[0]] = 15
 
-    lista[4][9] = 20
-    valor1 = bool (prolog.query("fase4(0)"))
+    ElenNum = valor["G"]
+    lista[ElenNum[1]][ElenNum[0]] = 20
+
+    valor1 = list(prolog.query("fase4(0)"))
+    print(valor1)
+
+    valor1 = bool(prolog.query("fase4(0)"))
     print(valor1)
 
     Game(lista)
-"""
 
 def Game(matriz):
 
@@ -141,6 +168,9 @@ def Game(matriz):
         for j in range(0,10):
             if matriz[k][j] == 1:
                 texto_resposta = Label(jogo, image=barril )
+                texto_resposta.grid(column=j,row=i)
+            elif matriz[k][j] == 3:
+                texto_resposta = Label(jogo, image=parede )
                 texto_resposta.grid(column=j,row=i)
             elif matriz[k][j] == 4:
                 texto_resposta = Label(jogo, image=escada )
@@ -169,6 +199,7 @@ janela.configure(background="#111")
 
 imagevazia = PhotoImage(file="Imagens/Preto.png")
 barril = PhotoImage(file="Imagens/BarrilF.png")
+parede = PhotoImage(file="Imagens/ParedeF.png")
 marreta = PhotoImage(file="Imagens/MarretaF.png")
 escada = PhotoImage(file="Imagens/EscadaF.png")
 
@@ -181,14 +212,12 @@ jogo.pack(padx=40, pady=40)
 
 Fase1 = Button ( jogo, text= "Fase1", command=fase1 )
 Fase1.grid(column=1,row=1)
-
-"""
 Fase2 = Button ( jogo, text= "Fase2", command=fase2 )
 Fase2.grid(column=2,row=1)
 Fase3 = Button ( jogo, text= "Fase3", command=fase3 )
 Fase3.grid(column=3,row=1)
 Fase4 = Button ( jogo, text= "Fase4", command=fase4 )
 Fase4.grid(column=4,row=1)
-"""
+
         
 janela.mainloop()
