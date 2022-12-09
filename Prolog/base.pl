@@ -1,50 +1,53 @@
 %main([0,0], [[4,0],[5,0],[1,2],[8,3],[1,4],[5,4]], [], [[3,0],[9,1],[6,2],[3,3]],[7,2], S).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%		Predicados dinâmicos			%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%______________________Variaveis dinâmicos______________________%
 
 :- dynamic pontuacao/1.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%		Fatos e Regras					%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%pega o primeiro elemento de uma lista
-pegaPrimeiro([Cabeca|_], Cabeca).
-
-member(X,[_|R]) :- member(X,R).
-member(X,[X|_]).
-
-intersection([X|Y],M,[X|Z]) :- member(X,M), intersection(Y,M,Z).
-intersection([X|Y],M,Z) :- not(member(X,M)), intersection(Y,M,Z).
-intersection([],M,[]).
-
-%calcula os pontos dos corações adiquiridos
-calcular( _,[]).
-calcular(Andar, [Cabeca|Cauda]) :-
-	retract(pontuacao(Pontos)),
-	PontuacaoFinal is (Pontos + Andar),
-	%write('Barril pilado na posicao: '),
-	%whiteIn(Cabeca),
-	%white('+'),
-	%white(Andar),
-	%white(' pontos'),
-	%white('Pontuacao: '),
-	%write(PontuacaoFinal),
-	asserta(pontuacao(PontuacaoFinal)),
-	calcular(Andar, Cauda).
+%______________________Fatos e Regras______________________%
 
 %inicializa os predicados dinâmicos
 inicializa :-
 	asserta(pontuacao(0)).
 
-%recolhe os corações e calcula e imprime a pontuação(recursiva)
+% Decompor a lista
+cons(X,Y,[X|Y]).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	Criar fases 1,2,3,4				    %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%chama a main com a predefinição da fase 1(Player, Barris, Escadas, Marreta)
+%Define uma meta
+meta(X, Y) :- X = Y.
+
+%Retira um elemento da lista e salva em outra
+retirar_elemento(Elem,[Elem|Cauda],Cauda).
+retirar_elemento(Elem,[Cabeca|Cauda],[Cabeca|Resultado]) :- retirar_elemento(Elem,Cauda,Resultado).
+
+%Faz a intercessão entre duas listas e salva em outra
+intersection([XI|YI],MI,[XI|ZI]) :- pertence(XI,MI), intersection(YI,MI,ZI).
+intersection([XI|YI],MI,ZI) :- not(pertence(XI,MI)), intersection(YI,MI,ZI).
+intersection([],MI,[]).
+
+%Inverter uma lista e salva em outra
+inverte([],[]).
+inverte([E|C], Linv):- inverte(C,C_Inv), concatena(C_Inv,[E], Linv).
+
+%Concatena duas listas e salva em outra
+concatena([],L,L).
+concatena([H|T],L2,[H|T2]) :- concatena(T,L2,T2).
+
+% Verififcar se um elemento esta na lista
+pertence(E, [E|_]).
+pertence(E, [_|Cauda]):- pertence(E, Cauda).
+
+%Calcula em quais pontos do mapa Mário pulou/quebrou um barril e soma os respectivos pontos a pontuação
+calcular( _,[]).
+calcular(Andar, [Cabeca|Cauda]) :-
+	retract(pontuacao(Pontos)),
+	PontuacaoFinal is (Pontos + Andar),
+	asserta(pontuacao(PontuacaoFinal)),
+	calcular(Andar, Cauda).
+
+%______________________Gera as fases predefinidas______________________%
+
+%chama a main com a predefinição da fase 1(Player, Barris, Escadas, Marreta, DonkeyKong, Princessa)
 dados1(A,B,C,D,E,F,G):-
 	CBarris = [[4,0],[5,0],[1,2],[8,3],[1,4],[5,4]],
 	CParedes = [],
@@ -72,9 +75,9 @@ fase1(Inicio) :-
 	CMarreta = [7,2],
 	CDonkeyKong = [8,4],
 	CPrincesa = [9,4],
-	main([Inicio,0], CBarris, CParedes, CEscadas,CMarreta, Solucao)).
+	main([Inicio,0], CBarris, CParedes, CEscadas, CMarreta, CDonkeyKong, CPrincesa, Solucao)).
 	
-%chama a main com a predefinição da fase 2(Player, Barris, Escadas, Marreta)
+%chama a main com a predefinição da fase 2(Player, Barris, Escadas, Marreta, DonkeyKong, Princessa)
 dados2(A,B,C,D,E,F,G):-
 	CBarris = [[6,1],[2,2],[4,2],[7,3],[5,4]],
     CParedes = [[6,0],[2,4]],
@@ -102,9 +105,9 @@ fase2(Inicio) :-
     CMarreta = [9,0],
     CDonkeyKong = [8,4],
     CPrincesa = [9,4],
-	main([Inicio,0], CBarris, CParedes, CEscadas,CMarreta, Solucao)).
+	main([Inicio,0], CBarris, CParedes, CEscadas, CMarreta, CDonkeyKong, CPrincesa, Solucao)).
 	
-%chama a main com a predefinição da fase 3(Player, Barris, Escadas, Marreta)
+%chama a main com a predefinição da fase 3(Player, Barris, Escadas, Marreta, DonkeyKong, Princessa)
 dados3(A,B,C,D,E,F,G):-
 	CBarris = [[6,1],[5,2],[7,2],[6,3],[5,4]],
 	CParedes = [[3,3],[6,4]],
@@ -130,9 +133,9 @@ fase3(Inicio) :-
 	CMarreta = [0,4],
 	CDonkeyKong = [8,4],
 	CPrincesa = [9,4],
-	main([Inicio,0], CBarris, CParedes, CEscadas,CMarreta, Solucao)).
+	main([Inicio,0], CBarris, CParedes, CEscadas, CMarreta, CDonkeyKong, CPrincesa, Solucao)).
 
-%chama a main com a predefinição da fase 4(Player, Barris, Escadas, Marreta)
+%chama a main com a predefinição da fase 4(Player, Barris, Escadas, Marreta, DonkeyKong, Princessa)
 dados4(A,B,C,D,E,F,G):-
 	CBarris = [[3,1],[6,1],[3,3],[5,4]],
 	CParedes = [[2,2],[6,4]],
@@ -158,11 +161,11 @@ fase4(Inicio) :-
 	CMarreta = [1,2],
 	CDonkeyKong = [8,4],
 	CPrincesa = [9,4],
-	main([Inicio,0], CBarris, CParedes, CEscadas,CMarreta, Solucao)).
+	main([Inicio,0], CBarris, CParedes, CEscadas, CMarreta, CDonkeyKong, CPrincesa, Solucao)).
 	
 
-% ====================================================== FUNCOES DE MOVIMENTOS =================================================================
-%_______________________________________________________ PreMarreta ____________________________________________________________________________
+%______________________Funçoes de Movimentação______________________%
+
 % Cima
 % Somente onde há uma escada
 s(
@@ -274,15 +277,15 @@ not(
 		ListaParedes
 	)
 ), 
+not(
+	pertence(
+		[Xnovo , Y], 
+		ListaEscadas
+	)
+), 
 pertence(
 	[Xnovo, Y], 
 	ListaBarris
-), 
-not(
-	pertence(
-		[Xnovo, Y], 
-		ListaEscadas
-	)
 ), 
 pertence(
 	[Xmid, Y], 
@@ -359,10 +362,6 @@ not(
 		ListaParedes
 	)
 ), 
-pertence(
-	[Xnovo, Y], 
-	ListaBarris
-),
 not(
 	pertence(
 		[Xnovo, Y], 
@@ -370,44 +369,15 @@ not(
 	)
 ), 
 pertence(
+	[Xnovo, Y], 
+	ListaBarris
+),
+pertence(
 	[Xmid, Y], 
 	ListaBarris
 ).
 
-
-%_______________________________________________________ PosMarreta ____________________________________________________________________________
-
-
-
-% ====================================================== FUNCOES DE MOVIMENTOS =================================================================
-
-
-
-% ============================================== FUNCOES BASICAS DE MANIPULAÇÃO DE LISTA ======================================================
-% Decompor a lista
-cons(X,Y,[X|Y]).
-
-% Inverter lista
-inverte([],[]).
-inverte([E|C], Linv):- inverte(C,C_Inv), concatena(C_Inv,[E], Linv).
-
-% Concatena duas listas
-concatena([],L,L).
-concatena([H|T],L2,[H|T2]) :- concatena(T,L2,T2).
-
-meta(X, Y) :- X = Y.
-
-% Verififcar se um elemento esta na lista
-pertence(E, [E|_]).
-pertence(E, [_|Cauda]):- pertence(E, Cauda).
-
-% Retira um elemento da lista
-retirar_elemento(Elem,[Elem|Cauda],Cauda).
-retirar_elemento(Elem,[Cabeca|Cauda],[Cabeca|Resultado]) :- retirar_elemento(Elem,Cauda,Resultado).
-% ============================================== FUNCOES BASICAS DE MANIPULAÇÃO DE LISTA ======================================================
-
-
-% ==================================================== BUSCA LARGURA ======================================================
+%______________________Funçao de Busca em Largura______________________%
 estende([Estado|Caminho],ListaSucessores,ListaBarris, ListaParedes,ListaEscadas):- 
 	bagof(
 		[Sucessor,Estado|Caminho], 
@@ -422,48 +392,51 @@ bl([Primeiro|Outros],ListaBarris, ListaParedes,ListaEscadas,Objetivo, Solucao) :
 	estende(Primeiro,Sucessores,ListaBarris, ListaParedes, ListaEscadas),
 	concatena(Outros,Sucessores,NovaFronteira),
 	bl(NovaFronteira,ListaBarris,ListaParedes,ListaEscadas,Objetivo, Solucao).
-% ==================================================== BUSCA LARGURA ======================================================
 
+%______________________Funçao Main______________________%
 
 solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, Objetivo, Solucao) :- bl([[PosicaoInicial]],ListaBarris, ListaParedes,ListaEscadas,Objetivo, Solucao).
 
-
 % Funcao principal - 
-% Paremetros: posição inicial da busca
-%             lista de barris 
-%			  lista de paredes
-%             lista de escadas
-%             posicao do martelo para matar o donkey kong
-%             variavel para receber o caminho percorrido
-
-% A Princesa Peach e o Donkey Kong se encontram no último andar e última coluna em todos os casos de teste
-main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, S) :-
+main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, PosicaoDonkeyKong, PosicaoPrincesa, S) :-
 	inicializa,
-	%coleta_coracoes(ListaBarris, PosicaoInicial, ListaEscadas, ListaParedes, PosicaoMartelo),
 	solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, PosicaoMartelo, S2),
 	inverte(S2, S2I),
-	write('Achou a Marreta na posição '),
+	write('Achou a Marreta na posicao '),
 	write(PosicaoMartelo),
-	write(', Coletado pelo seguinte caminho:'),
+	write(', coletado pelo seguinte caminho:'),
 	writeln(S2I),
-	cons(X, Y, S2),
-	solucao_bl(X, ListaBarris,ListaParedes,ListaEscadas, [9, 4], S3),
-	inverte(S3, S3I),
-	write('Apos pegar a marreta achou o Donkey Kong na posição '),
-	write([9, 4]),
-	write(', pelo seguinte caminho:'),
-	writeln(S3I),
-	retirar_elemento(PosicaoMartelo,S2,S2SM),
-	concatena(S3, S2SM, S4),
-	inverte(S4, S4I),
-	write('Caminho completo percorrido para alcançar o objetico:'),
-	writeln(S4I),
-	inverte(S4, CFinal),
+	inverte(S2, CFinal),
 	intersection(CFinal,ListaBarris,ListaBarrisPulados),
 	write('Lista de barris pulados:'),
 	write(ListaBarrisPulados),
 	calcular(100,ListaBarrisPulados),
-	%retract(pontuacao(Pontos)),
-	%white('Pontuacao final: '),
-	%white(Pontos),
+	write(' | Pontuacao atual: '),
+	pontuacao(Pontuacao),
+	write(Pontuacao),
+	write('\n'),
+	cons(X, Y, S2),
+	solucao_bl(X, ListaBarris,ListaParedes,ListaEscadas, PosicaoPrincesa, S3),
+	inverte(S3, S3I),
+	write('Apos pegar a marreta achou o Donkey Kong na posicao '),
+	write(PosicaoDonkeyKong),
+	write(', e alcancou a princesa pelo seguinte caminho:'),
+	writeln(S3I),
+	inverte(S3, CFinal2),
+	intersection(CFinal2,ListaBarris,ListaBarrisMartelados),
+	write('Lista de barris martelados:'),
+	write(ListaBarrisMartelados),
+	calcular(500,ListaBarrisMartelados),
+	write(' | Pontuacao atual: '),
+	pontuacao(Pontuacao2),
+	write(Pontuacao2),
+	write('\n'),
+	retirar_elemento(PosicaoMartelo,S2,S2SM),
+	concatena(S3, S2SM, S4),
+	inverte(S4, S4I),
+	write('Caminho completo percorrido para alcancar o objetico:'),
+	write(S4I),
+	write(' | Pontuacao final: '),
+	pontuacao(Pontuacao3),
+	write(Pontuacao3),
 	inverte(S4, S).

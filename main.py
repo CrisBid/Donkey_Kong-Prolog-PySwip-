@@ -10,8 +10,6 @@ lista = np.zeros((10,10),dtype=np.int64)
 Game = False
 
 def fase1():
-    
-
     A = "X"
 
     for valor in prolog.query("dados1("+ A +",B,C,D,E,F,G)"):
@@ -49,7 +47,6 @@ def fase1():
 
 
 def fase2():
-
     A = "X"
 
     for valor in prolog.query("dados2("+ A +",B,C,D,E,F,G)"):
@@ -87,7 +84,6 @@ def fase2():
 
 
 def fase3():
-
     A = "X"
 
     for valor in prolog.query("dados3("+ A +",B,C,D,E,F,G)"):
@@ -124,9 +120,8 @@ def fase3():
     Game(lista)
 
 def fase4():
-
     A = "X"
-
+   
     for valor in prolog.query("dados4("+ A +",B,C,D,E,F,G)"):
         print(valor["X"],"\n", valor["B"],"\n", valor["C"],"\n",valor["D"],"\n", valor["E"],"\n", valor["F"],"\n",valor["G"],"\n")
 
