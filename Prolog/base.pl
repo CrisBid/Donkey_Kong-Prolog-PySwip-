@@ -5,7 +5,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- dynamic pontuacao/1.
-:- dynamic ultimapos/1.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %		Fatos e Regras					%
@@ -14,39 +13,33 @@
 %pega o primeiro elemento de uma lista
 pegaPrimeiro([Cabeca|_], Cabeca).
 
+member(X,[_|R]) :- member(X,R).
+member(X,[X|_]).
+
+intersection([X|Y],M,[X|Z]) :- member(X,M), intersection(Y,M,Z).
+intersection([X|Y],M,Z) :- not(member(X,M)), intersection(Y,M,Z).
+intersection([],M,[]).
+
 %calcula os pontos dos corações adiquiridos
-calcular(Andar) :-
-	Andar1 is (Andar + 1),
-	Pts is (Andar1 * 100),
+calcular( _,[]).
+calcular(Andar, [Cabeca|Cauda]) :-
 	retract(pontuacao(Pontos)),
-	PontuacaoFinal is (Pontos + Pts),
-	asserta(pontuacao(PontuacaoFinal)).
+	PontuacaoFinal is (Pontos + Andar),
+	%write('Barril pilado na posicao: '),
+	%whiteIn(Cabeca),
+	%white('+'),
+	%white(Andar),
+	%white(' pontos'),
+	%white('Pontuacao: '),
+	%write(PontuacaoFinal),
+	asserta(pontuacao(PontuacaoFinal)),
+	calcular(Andar, Cauda).
 
 %inicializa os predicados dinâmicos
 inicializa :-
-	asserta(pontuacao(0)),
-	asserta(ultimapos([])).
+	asserta(pontuacao(0)).
 
 %recolhe os corações e calcula e imprime a pontuação(recursiva)
-coleta_coracoes([], _, _, _, _).
-coleta_coracoes([Cabeca|Cauda], PosicaoInicial, ListaEscadas, ListaParedes, DonkeyKong) :-
-	Objetivo = Cabeca,
-	solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, PosicaoMartelo, CaminhoObjetivo),
-	pegaPrimeiro(CaminhoObjetivo, I),
-	pegaPrimeiro(Cabeca, Andar),
-	calcular(Andar),
-	write('Pulou um barril'),
-	write(I),
-	write(' No seguinte caminho:'),
-	inverte(CaminhoObjetivo, CaminhoCorreto),
-	writeln(CaminhoCorreto),
-	write('Pontuacao atual: '),
-	pontuacao(Pontuacao),
-	writeln(Pontuacao),
-	retract(ultimapos(L)),
-	pegaPrimeiro(CaminhoObjetivo, U),
-	asserta(ultimapos(U)),
-	coleta_coracoes(Cauda, I, ListaEscadas, ListaParedes, DonkeyKong).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %	Criar fases 1,2,3,4				    %
@@ -169,6 +162,7 @@ fase4(Inicio) :-
 	
 
 % ====================================================== FUNCOES DE MOVIMENTOS =================================================================
+%_______________________________________________________ PreMarreta ____________________________________________________________________________
 % Cima
 % Somente onde há uma escada
 s(
@@ -219,7 +213,8 @@ s(
 	ListaBarris, 
 	ListaParedes,
 	ListaEscadas
-):- X<9, Xnovo is X + 1, 
+):- X<9, 
+Xnovo is X + 1, 
 not(
 	pertence(
 		[Xnovo, Y], 
@@ -238,8 +233,9 @@ s(
 	ListaBarris, 
 	ListaParedes,
 	ListaEscadas
-):- X<8, Xnovo is X + 2, 
-Xmid is X+1, 
+):- X<8, 
+Xnovo is X + 1, 
+Xmid is X+1,
 not(
 	pertence(
 		[Xnovo, Y], 
@@ -263,6 +259,36 @@ pertence(
 	ListaBarris
 ).
 
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X<8, 
+Xnovo is X + 1, 
+Xmid is X+1,
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+pertence(
+	[Xnovo, Y], 
+	ListaBarris
+), 
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaEscadas
+	)
+), 
+pertence(
+	[Xmid, Y], 
+	ListaBarris
+).
+
 % Esquerda
 % Dois casos:
 %			1) Caso não haja parede nem barril, anda uma unidade
@@ -274,7 +300,7 @@ s(
 	ListaParedes,
 	ListaEscadas
 ):- X>0, 
-Xnovo is X - 1, 
+Xnovo is X - 1,
 not(
 	pertence(
 		[Xnovo, Y], 
@@ -294,8 +320,8 @@ s(
 	ListaParedes,
 	ListaEscadas
 ):- X>1, 
-Xnovo is X - 2, 
-Xmid is X-1, 
+Xnovo is X - 1, 
+Xmid is X-1,
 not(
 	pertence(
 		[Xnovo, Y], 
@@ -318,6 +344,41 @@ pertence(
 	[Xmid, Y], 
 	ListaBarris
 ).
+s(
+	[X,Y], 
+	[Xnovo,Y],
+	ListaBarris, 
+	ListaParedes,
+	ListaEscadas
+):- X>1, 
+Xnovo is X - 1, 
+Xmid is X-1,
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaParedes
+	)
+), 
+pertence(
+	[Xnovo, Y], 
+	ListaBarris
+),
+not(
+	pertence(
+		[Xnovo, Y], 
+		ListaEscadas
+	)
+), 
+pertence(
+	[Xmid, Y], 
+	ListaBarris
+).
+
+
+%_______________________________________________________ PosMarreta ____________________________________________________________________________
+
+
+
 % ====================================================== FUNCOES DE MOVIMENTOS =================================================================
 
 
@@ -378,7 +439,7 @@ solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, Objetivo, Soluc
 % A Princesa Peach e o Donkey Kong se encontram no último andar e última coluna em todos os casos de teste
 main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, S) :-
 	inicializa,
-	coleta_coracoes(ListaBarris, PosicaoInicial, ListaEscadas, ListaParedes, [9, 4]),
+	%coleta_coracoes(ListaBarris, PosicaoInicial, ListaEscadas, ListaParedes, PosicaoMartelo),
 	solucao_bl(PosicaoInicial,ListaBarris,ListaParedes,ListaEscadas, PosicaoMartelo, S2),
 	inverte(S2, S2I),
 	write('Achou a Marreta na posição '),
@@ -397,4 +458,12 @@ main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, S)
 	inverte(S4, S4I),
 	write('Caminho completo percorrido para alcançar o objetico:'),
 	writeln(S4I),
+	inverte(S4, CFinal),
+	intersection(CFinal,ListaBarris,ListaBarrisPulados),
+	write('Lista de barris pulados:'),
+	write(ListaBarrisPulados),
+	calcular(100,ListaBarrisPulados),
+	%retract(pontuacao(Pontos)),
+	%white('Pontuacao final: '),
+	%white(Pontos),
 	inverte(S4, S).
