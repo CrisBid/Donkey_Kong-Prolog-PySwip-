@@ -39,11 +39,11 @@ pertence(E, [_|Cauda]):- pertence(E, Cauda).
 
 %Calcula em quais pontos do mapa Mário pulou/quebrou um barril e soma os respectivos pontos a pontuação
 calcular( _,[]).
-calcular(Andar, [Cabeca|Cauda]) :-
+calcular(Valor, [Cabeca|Cauda]) :-
 	retract(pontuacao(Pontos)),
-	PontuacaoFinal is (Pontos + Andar),
+	PontuacaoFinal is (Pontos + Valor),
 	asserta(pontuacao(PontuacaoFinal)),
-	calcular(Andar, Cauda).
+	calcular(Valor, Cauda).
 
 %______________________Gera as fases predefinidas______________________%
 
@@ -405,7 +405,8 @@ main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, Po
 	write('Achou a Marreta na posicao '),
 	write(PosicaoMartelo),
 	write(', coletado pelo seguinte caminho:'),
-	writeln(S2I),
+	write(S2I),
+	write('.\n'),
 	inverte(S2, CFinal),
 	intersection(CFinal,ListaBarris,ListaBarrisPulados),
 	write('Lista de barris pulados:'),
@@ -414,14 +415,15 @@ main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, Po
 	write(' | Pontuacao atual: '),
 	pontuacao(Pontuacao),
 	write(Pontuacao),
-	write('\n'),
+	write('.\n'),
 	cons(X, Y, S2),
 	solucao_bl(X, ListaBarris,ListaParedes,ListaEscadas, PosicaoPrincesa, S3),
 	inverte(S3, S3I),
 	write('Apos pegar a marreta achou o Donkey Kong na posicao '),
 	write(PosicaoDonkeyKong),
 	write(', e alcancou a princesa pelo seguinte caminho:'),
-	writeln(S3I),
+	write(S3I),
+	write('.\n'),
 	inverte(S3, CFinal2),
 	intersection(CFinal2,ListaBarris,ListaBarrisMartelados),
 	write('Lista de barris martelados:'),
@@ -430,7 +432,7 @@ main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, Po
 	write(' | Pontuacao atual: '),
 	pontuacao(Pontuacao2),
 	write(Pontuacao2),
-	write('\n'),
+	write('.\n'),
 	retirar_elemento(PosicaoMartelo,S2,S2SM),
 	concatena(S3, S2SM, S4),
 	inverte(S4, S4I),
@@ -439,4 +441,5 @@ main(PosicaoInicial, ListaBarris, ListaParedes, ListaEscadas, PosicaoMartelo, Po
 	write(' | Pontuacao final: '),
 	pontuacao(Pontuacao3),
 	write(Pontuacao3),
+	write('.'),
 	inverte(S4, S).
